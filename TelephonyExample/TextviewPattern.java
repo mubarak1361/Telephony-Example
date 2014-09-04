@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.util.Patterns;
 import android.widget.TextView;
 
@@ -20,13 +21,14 @@ public class TextviewPattern extends Activity {
 		
 		text =(TextView)findViewById(R.id.text);
 		
-		String a = "This is a #sample #twitter text of @tom_cruise with a link  http://www.google.com \n"
+		String a = "This is a #sample #twitter text of @tom_cruise with a link  http://www.google.com \n\n\n"
 				+ "\n The @browser will remove extra spaces and extra #lines when the page is #displayed. Any number of lines count"
 				+ "\n\n As #one line, and any number of spaces @count as one #space. \n\n disfrutarz@gmail.com"
-				+ "\n\n The @browser will remove extra spaces and extra #lines when the page is #displayed. "
-				+ "\n\n  Any number of lines count #9o0-9023jdlas-_ "
-				+ "\n\n  #Displays text to the @user and optionally allows them to @edit it. "
-				+ "\n\n       A @TextView is a complete text editor, however the basic class is #configured to not allow editing; "
+				+ "\n\n          The @browser will remove extra spaces and extra #lines when the page is #displayed. "
+				+ "\n\nAny number of lines count #9o0-9023jdlas-_ "
+				+ "\n\n  #Displays text to the @user and opt"
+				+ "ionally allows them to @edit it. "
+				+ "\n\n       A @TextView is a complete text editor, however the basic class is #configured to not allow editing "
 				+ "\n\n       see @EditText for a          subclass that #configures the text view for #editing. ";
 
 		Pattern mentionPattern = Pattern.compile("(@[A-Za-z0-9_-]+)");
@@ -34,15 +36,25 @@ public class TextviewPattern extends Activity {
 		Pattern urlPattern = Patterns.WEB_URL;
 		Pattern emailPattern = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 				+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
-		Pattern newLinePattern = Pattern.compile("(?m)^.*$");
+		Pattern newLinePattern = Pattern.compile("\n");
+		Pattern whiteSpacePattern = Pattern.compile("\\s\\s");
 
 		StringBuffer sb = new StringBuffer(a.length());
 		Matcher nl = newLinePattern.matcher(a);
 		
 		while (nl.find()) {
-		    nl.appendReplacement(sb, nl.group() + "<br>");
+		    nl.appendReplacement(sb, nl.group(0) + "<br>");
 		}
 		nl.appendTail(sb);
+		
+		Matcher ws = whiteSpacePattern.matcher(sb.toString());
+		sb = new StringBuffer(sb.length());
+		
+		while(ws.find()) {
+			
+			ws.appendReplacement(sb, ws.group(0)+"&nbsp;");
+		}
+		ws.appendTail(sb);
 
 		Matcher o = hashtagPattern.matcher(sb.toString());
 		sb = new StringBuffer(sb.length());
@@ -76,6 +88,7 @@ public class TextviewPattern extends Activity {
 		}
 		e.appendTail(sb);
 
+		Log.d("String", String.valueOf(sb));
 		text.setText(Html.fromHtml(sb.toString()));
 	}
 
