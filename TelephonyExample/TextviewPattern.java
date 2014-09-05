@@ -34,6 +34,7 @@ public class TextviewPattern extends Activity {
 				+ "\n\n       A @TextView is a complete text editor, however the basic class is #configured to not allow editing "
 				+ "\n\n       see @EditText for a          subclass that #configures the text view for #editing. ";	
 		 
+		
 		SpannableStringBuilder spannable = new SpannableStringBuilder( a );
 		
 		Pattern mentionPattern = Pattern.compile("(@[A-Za-z0-9_-]+)");
@@ -54,6 +55,7 @@ public class TextviewPattern extends Activity {
 			 spannable.setSpan(new ForegroundColorSpan(Color.rgb(0, 105,  92)), n.start(), n.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		}
 
+		
 		text.setText(spannable);
 		
 	}
